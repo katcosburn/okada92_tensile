@@ -19,12 +19,12 @@ nu     = 0.25;
 %  zt     = z coordinate of top left corner of fault, positive downwards (m)
 %  z0     = z coordinate of bottom left corner of fault (m)
 
-L = 10e3;
-W = 5e3;
+L = 1e3;
+W = 2e3;
 U = 1.0;
 
 phi   = deg2rad(90);
-delta = deg2rad(1);
+delta = deg2rad(90);
 
 x0 = 0e3;
 y0 = 0e3;
@@ -34,7 +34,7 @@ z0 = zt + W*sin(delta);
 %% Set up box of coordinates over which to get displacements
 
 res  = 80;    % resolution of box 
-bpad = 2e4;    % padding of box around fault
+bpad = 1e4;    % padding of box around fault
 
 rotmat   = [sin(phi), cos(phi); -cos(phi), sin(phi)]; 
 midpoint = rotmat\[x0 + 0.5*L; y0 + 0.5*W*cos(delta)];
@@ -95,32 +95,29 @@ grid on
 
 %% Plot 4 (strain plot)
 
-% area_dil = duu_dx + dvv_dy;
-% sstrain1 = duu_dx - dvv_dy;
-% sstrain2 = duu_dy + dvv_dx;
-% 
-% figure(4); hold on;
-% 
-% subplot(3,1,1); hold on;
-% set(gca, 'FontSize', 14)
-% surf(xx*(1e-3), yy*(1e-3), area_dil, 'FaceAlpha', .95, 'EdgeColor', [.3 .3 .3]) 
-% xlabel('X (m)'); zlabel('du/dx + dv/dy');
-% xlim([-5 10]);
-% view(0, 0)
-% grid on
-% 
-% subplot(3,1,2); hold on;
-% set(gca, 'FontSize', 14)
-% surf(xx*(1e-3), yy*(1e-3), sstrain1, 'FaceAlpha', .95, 'EdgeColor', [.3 .3 .3]) 
-% xlabel('X (m)'); zlabel('du/dx - dv/dy');
-% xlim([-5 10]);
-% view(0, 0)
-% grid on
-% 
-% subplot(3,1,3); hold on;
-% set(gca, 'FontSize', 14)
-% surf(xx*(1e-3), yy*(1e-3), sstrain2, 'FaceAlpha', .95, 'EdgeColor', [.3 .3 .3]) 
-% xlabel('X (m)'); zlabel('du/dx + dv/dx');
-% xlim([-5 10]);
-% view(0, 0)
-% grid on
+area_dil = duu_dx + dvv_dy;
+sstrain1 = duu_dx - dvv_dy;
+sstrain2 = duu_dy + dvv_dx;
+
+figure(4); hold on;
+
+subplot(3,1,1); hold on;
+set(gca, 'FontSize', 14)
+surf(xx, yy, area_dil, 'FaceAlpha', .95, 'EdgeColor', [.3 .3 .3]) 
+xlabel('X (m)'); zlabel('du/dx + dv/dy');
+view(-65, 10)
+grid on
+
+subplot(3,1,2); hold on;
+set(gca, 'FontSize', 14)
+surf(xx, yy, sstrain1, 'FaceAlpha', .95, 'EdgeColor', [.3 .3 .3]) 
+xlabel('X (m)'); zlabel('du/dx - dv/dy');
+view(-65, 10)
+grid on
+
+subplot(3,1,3); hold on;
+set(gca, 'FontSize', 14)
+surf(xx, yy, sstrain2, 'FaceAlpha', .95, 'EdgeColor', [.3 .3 .3]) 
+xlabel('X (m)'); zlabel('du/dx + dv/dx');
+view(-65, 10)
+grid on
