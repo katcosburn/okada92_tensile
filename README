@@ -5,6 +5,8 @@ Solves for the internal deformation due to a rectangular tensile crack opening i
 
 Code outputs displacements and their derivatives.
 
-The basic_setup.m code runs a single case given the user-defined parameters (image to follow).
+The basic_setup.m code runs a single case given the user-defined parameters as show below:
+
+![geometryparams](https://github.com/katcosburn/okada92_tensile/blob/master/geometry.png)
 
 
