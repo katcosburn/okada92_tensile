@@ -1,6 +1,6 @@
 function plotfault(dim, x0, y0, z0, L, W, phi, delta) 
 
-rotmatinv = [sin(phi), -cos(phi); cos(phi), sin(phi)]; 
+rotmat = [sin(phi), cos(phi); -cos(phi), sin(phi)]; 
 
 dz = W*sin(delta);
 
@@ -8,9 +8,9 @@ z1 = z0 - dz;
 xn = x0 + L;
 yn = y0 + W*cos(delta);
 
-xy1 = rotmatinv*[xn; y0];
-xy2 = rotmatinv*[xn; yn];
-xy3 = rotmatinv*[x0; yn];
+xy1 = rotmat\[xn; y0];
+xy2 = rotmat\[xn; yn];
+xy3 = rotmat\[x0; yn];
 
 if dim == 2
     
