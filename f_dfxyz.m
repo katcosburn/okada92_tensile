@@ -10,7 +10,7 @@ ctilde  = dtilde + z;
 
 Rdtilde = R + dtilde;
 alpha2  = 1 - alpha;
-D11     = 1/R/Rdtilde;
+D11     = 1/(R*Rdtilde);
 
 %% Check singularlity conditions
 
