@@ -9,4 +9,7 @@ The basic_setup.m code runs a single case given the user-defined parameters as s
 
 ![geometryparams](geometry.png)
 
+The dipangletest.m code iterates through a suite of dip angles (delta).
+
+The zleveltest.m code iterates through a suite of z-values at which the solution is evaluated.
 
