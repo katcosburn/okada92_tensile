@@ -4,19 +4,12 @@ clear all; close all;
 
 %% Initial settings
 
-mu = 1e9;         % material properties
+create_gif = false;
+
+mu = 1e9;
 nu = 0.25;
 
 %% Define fault parameters:
-%
-%  L      = length along fault strike direction (m)
-%  W      = length along perpendicular direction to strike (m)
-%  U      = dislocation amount (m)
-%  phi    = strike angle (rad) 
-%  delta  = dip angle (rad)
-%  x0, y0 = x and y coordinates of bottom left corner of fault (m)
-%  zt     = z coordinate of top left corner of fault, positive downwards (m)
-%  z0     = z coordinate of bottom left corner of fault (m)
 
 L = 2e3;
 W = 1e3;
@@ -32,9 +25,19 @@ z0 = zt + W*sin(delta);
 
 zlevel = -1*[(0:20:zt-1), (zt+1:20:z0-1), (z0+1:20:z0+500)];
 
+if create_gif
+    
+    h1 = figure(1);
+    h2 = figure(2);
+
+    fname1 = 'quiverplot_v1.gif';
+    fname2 = 'surfplot_v1.gif';
+
+end
+
 for zl = 1:length(zlevel)
 
-    res  = 40;
+    res  = 20;
     bpad = 5e3;
     
     rotmat   = [sin(phi), cos(phi); -cos(phi), sin(phi)];
@@ -70,10 +73,35 @@ for zl = 1:length(zlevel)
     quiver3(xx, yy, zlevel(zl)*ones(size(xx)), uu, vv, ww, 2);
     plotfault(3, x0, y0, z0, L, W, phi, delta);
     plot3(x0, y0, -z0, 'ko', 'markerfacecolor', 'y')
-    xlim([bmin_x bmax_x]); ylim([bmin_y bmax_y]); zlim([-(z0+600) 600]);
+    xlim([bmin_x bmax_x]); ylim([bmin_y bmax_y]); zlim([-(zlevel(end)+100) zlevel(1)+600]);
     xlabel('X (m)'); ylabel('Y (m)'); zlabel('Z (m)');
     title('3D Displacement Field with Fault')
     view(-85, 10)
     grid on
+    
+    if create_gif
+        
+        frame1 = getframe(h1);
+        im = frame2im(frame1);
+        [imind,cm] = rgb2ind(im,256);
+        
+        if d == 1
+            imwrite(imind, cm, fname1, 'gif', 'Loopcount', inf);
+        else
+            imwrite(imind, cm, fname1, 'gif', 'WriteMode', 'append');
+        end
+        
+        
+        frame2 = getframe(h2);
+        im = frame2im(frame2);
+        [imind,cm] = rgb2ind(im,256);
+        
+        if d == 1
+            imwrite(imind, cm, fname2, 'gif', 'Loopcount', inf);
+        else
+            imwrite(imind, cm, fname2, 'gif', 'WriteMode', 'append');
+        end
+        
+    end
 
 end

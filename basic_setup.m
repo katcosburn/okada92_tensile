@@ -4,9 +4,9 @@ clear all; close all;
 
 %% Initial settings
 
-zlevel = 0e3;         % depth of internal deformation (0 = free surface) 
-mu     = 1e9;         % material properties
-nu     = 0.25;
+zlevel = 0e3;         % depth of internal deformation (m) -> 0 is free surface
+mu     = 1e9;         % material properties, shear modulus (Pa)
+nu     = 0.25;        % material properties, Poisson ratio
 
 %% Define fault parameters:
 %
@@ -19,8 +19,8 @@ nu     = 0.25;
 %  zt     = z coordinate of top left corner of fault, positive downwards (m)
 %  z0     = z coordinate of bottom left corner of fault (m)
 
-L = 1e3;
-W = 2e3;
+L = 2e3;
+W = 1e3;
 U = 1.0;
 
 phi   = deg2rad(90);
@@ -28,7 +28,7 @@ delta = deg2rad(90);
 
 x0 = 0e3;
 y0 = 0e3;
-zt = 1e3;
+zt = 3e3;
 z0 = zt + W*sin(delta);
 
 %% Set up box of coordinates over which to get displacements

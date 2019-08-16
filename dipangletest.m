@@ -4,8 +4,10 @@ clear all; close all;
 
 %% Initial settings
 
-zlevel = 0e3;         % depth of internal deformation (0 = free surface) 
-mu     = 1e9;         % material properties
+create_gif = false;
+
+zlevel = 0e3;
+mu     = 1e9;
 nu     = 0.25;
 
 %% Define fault parameters:
@@ -22,8 +24,15 @@ y0 = 0e3;
 zt = 3e3;
 z0_arr = zt + W*sin(delta);
 
-% h1     = figure(1);           h2     = figure(2);
-% fname1 = 'quiverplot_v1.gif';    fname2 = 'surfplot_v1.gif';
+if create_gif
+    
+    h1 = figure(1);
+    h2 = figure(2);
+
+    fname1 = 'quiverplot_v1.gif';
+    fname2 = 'surfplot_v1.gif';
+
+end
 
 for d = 1:length(delta)
     
@@ -62,19 +71,8 @@ for d = 1:length(delta)
     xlim([bmin_x bmax_x]); ylim([bmin_y bmax_y]); zlim([-4000 750]);
     xlabel('X (m)'); ylabel('Y (m)'); zlabel('Z (m)');
     title(sprintf('Dip Angle: %.1f\\circ', rad2deg(delta(d))))
-%     view(-65, 5)
     view(-90, 0)
     grid on
-    
-%     frame1 = getframe(h1);
-%     im = frame2im(frame1);
-%     [imind,cm] = rgb2ind(im,256);
-% 
-%     if d == 1
-%         imwrite(imind, cm, fname1, 'gif', 'Loopcount', inf);
-%     else
-%         imwrite(imind, cm, fname1, 'gif', 'WriteMode', 'append');
-%     end
     
     %% Plot 2 (displacement in z-direction surf plot)
     
@@ -84,18 +82,32 @@ for d = 1:length(delta)
     xlim([bmin_x bmax_x]); ylim([bmin_y bmax_y]); zlim([-.01 .1]);
     xlabel('X (m)'); ylabel('Y (m)'); zlabel('Z (m)');
     title(sprintf('Z Displacement; Dip Angle: %.1f\\circ', rad2deg(delta(d))))
-%     view(-65, 10)
     view(-90, 0)
     grid on
     
-%     frame2 = getframe(h2);
-%     im = frame2im(frame2);
-%     [imind,cm] = rgb2ind(im,256);
-% 
-%     if d == 1
-%         imwrite(imind, cm, fname2, 'gif', 'Loopcount', inf);
-%     else
-%         imwrite(imind, cm, fname2, 'gif', 'WriteMode', 'append');
-%     end
+    if create_gif
+    
+        frame1 = getframe(h1);
+        im = frame2im(frame1);
+        [imind,cm] = rgb2ind(im,256);
+        
+        if d == 1
+            imwrite(imind, cm, fname1, 'gif', 'Loopcount', inf);
+        else
+            imwrite(imind, cm, fname1, 'gif', 'WriteMode', 'append');
+        end
+        
+        
+        frame2 = getframe(h2);
+        im = frame2im(frame2);
+        [imind,cm] = rgb2ind(im,256);
+        
+        if d == 1
+            imwrite(imind, cm, fname2, 'gif', 'Loopcount', inf);
+        else
+            imwrite(imind, cm, fname2, 'gif', 'WriteMode', 'append');
+        end
+    
+    end
 
 end
