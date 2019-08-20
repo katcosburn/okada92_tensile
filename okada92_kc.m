@@ -7,9 +7,9 @@ alpha  = (lambda + mu)/(lambda + 2*mu);
 % -> centre at (x0,y0) and rotate by strike angle phi
 
 rotmat = [sin(phi), cos(phi); -cos(phi), sin(phi)];
-xyrot  = rotmat*[x-x0; y-y0];
-xc     = xyrot(1);
-yc     = xyrot(2);
+xyrot  = rotmat*[x(:) - x0, y(:) - y0]';
+xc     = xyrot(1,:);
+yc     = xyrot(2,:);
 
 %% Collect fA, fB, fC functions from Table 6
 
@@ -49,45 +49,37 @@ end
      
 %% From Equation 15 (Chinnery's expression)
 
-addsub = [1, -1, -1, 1];
+A  = fAa  - fAb  - fAc  + fAd;
+AT = fATa - fATb - fATc + fATd;
+B  = fBa  - fBb  - fBc  + fBd;
+C  = fCa  - fCb  - fCc  + fCd;
+    
+dAdx  = dfAa_dx  - dfAb_dx  - dfAc_dx  + dfAd_dx;
+dATdx = dfATa_dx - dfATb_dx - dfATc_dx + dfATd_dx;
+dBdx  = dfBa_dx  - dfBb_dx  - dfBc_dx  + dfBd_dx;
+dCdx  = dfCa_dx  - dfCb_dx  - dfCc_dx  + dfCd_dx;
 
-[A, AT, B, C, dAdx, dATdx, dBdx, dCdx, dAdy, dATdy, dBdy, dCdy, dAdz, dATdz, dBdz, dCdz] = deal(zeros(1,3));
+dAdy  = dfAa_dy  - dfAb_dy  - dfAc_dy  + dfAd_dy;
+dATdy = dfATa_dy - dfATb_dy - dfATc_dy + dfATd_dy;
+dBdy  = dfBa_dy  - dfBb_dy  - dfBc_dy  + dfBd_dy;
+dCdy  = dfCa_dy  - dfCb_dy  - dfCc_dy  + dfCd_dy;
 
-for i = 1:3
-   
-    A(i)     = sum([fAa(i),  fAb(i),  fAc(i),  fAd(i)].*addsub);
-    AT(i)    = sum([fATa(i), fATb(i), fATc(i), fATd(i)].*addsub);
-    B(i)     = sum([fBa(i),  fBb(i),  fBc(i),  fBd(i)].*addsub);
-    C(i)     = sum([fCa(i),  fCb(i),  fCc(i),  fCd(i)].*addsub);
-    
-    dAdx(i)  = sum([dfAa_dx(i),  dfAb_dx(i),  dfAc_dx(i),  dfAd_dx(i)].*addsub);
-    dATdx(i) = sum([dfATa_dx(i), dfATb_dx(i), dfATc_dx(i), dfATd_dx(i)].*addsub);
-    dBdx(i)  = sum([dfBa_dx(i),  dfBb_dx(i),  dfBc_dx(i),  dfBd_dx(i)].*addsub);
-    dCdx(i)  = sum([dfCa_dx(i),  dfCb_dx(i),  dfCc_dx(i),  dfCd_dx(i)].*addsub);
-    
-    dAdy(i)  = sum([dfAa_dy(i),  dfAb_dy(i),  dfAc_dy(i),  dfAd_dy(i)].*addsub);
-    dATdy(i) = sum([dfATa_dy(i), dfATb_dy(i), dfATc_dy(i), dfATd_dy(i)].*addsub);
-    dBdy(i)  = sum([dfBa_dy(i),  dfBb_dy(i),  dfBc_dy(i),  dfBd_dy(i)].*addsub);
-    dCdy(i)  = sum([dfCa_dy(i),  dfCb_dy(i),  dfCc_dy(i),  dfCd_dy(i)].*addsub);
-    
-    dAdz(i)  = sum([dfAa_dz(i),  dfAb_dz(i),  dfAc_dz(i),  dfAd_dz(i)].*addsub);
-    dATdz(i) = sum([dfATa_dz(i), dfATb_dz(i), dfATc_dz(i), dfATd_dz(i)].*addsub);
-    dBdz(i)  = sum([dfBa_dz(i),  dfBb_dz(i),  dfBc_dz(i),  dfBd_dz(i)].*addsub);
-    dCdz(i)  = sum([dfCa_dz(i),  dfCb_dz(i),  dfCc_dz(i),  dfCd_dz(i)].*addsub);
-    
-end
+dAdz  = dfAa_dz  - dfAb_dz  - dfAc_dz  + dfAd_dz;
+dATdz = dfATa_dz - dfATb_dz - dfATc_dz + dfATd_dz;
+dBdz  = dfBa_dz  - dfBb_dz  - dfBc_dz  + dfBd_dz;
+dCdz  = dfCa_dz  - dfCb_dz  - dfCc_dz  + dfCd_dz;
 
 %% Calculate displacements in x, y, z directions using convention in Eqs. 16, 17
 
-uP = (0.5*U/pi)*(A(1) - AT(1) + B(1) + z*C(1));
-vP = (0.5*U/pi)*((A(2) - AT(2) + B(2) + z*C(2))*cos(delta) - (A(3) - AT(3) + B(3) + z*C(3))*sin(delta));
-wP = (0.5*U/pi)*((A(2) - AT(2) + B(2) - z*C(2))*sin(delta) + (A(3) - AT(3) + B(3) - z*C(3))*cos(delta));
+uP = (0.5*U/pi)*(A(1,:) - AT(1,:) + B(1,:) + z*C(1,:));
+vP = (0.5*U/pi)*((A(2,:) - AT(2,:) + B(2,:) + z*C(2,:))*cos(delta) - (A(3,:) - AT(3,:) + B(3,:) + z*C(3,:))*sin(delta));
+wP = (0.5*U/pi)*((A(2,:) - AT(2,:) + B(2,:) - z*C(2,:))*sin(delta) + (A(3,:) - AT(3,:) + B(3,:) - z*C(3,:))*cos(delta));
 
 uvrot = rotmat\[uP; vP];
 
-u  = uvrot(1);
-v  = uvrot(2);
-w  = wP;
+u  = reshape(uvrot(1,:), size(x));
+v  = reshape(uvrot(2,:), size(y));
+w  = reshape(wP, size(x));
 
 %% Calculate x, y, z derivatives in x, y, z directions using convention in Eqs. 16, 17
 
@@ -101,29 +93,28 @@ rotmat_dvs = [sin(phi)^2  ,    cos(phi)^2    ,  0,  sin(phi)*cos(phi),    0     
                   0       ,        0         ,  0,          0        ,    0     ,          0        ,     0   ,  sin(phi), cos(phi) ; ...
                   0       ,        0         ,  0,          0        ,    0     ,          0        ,     0   , -cos(phi), sin(phi)];
 
-dudxP = (0.5*U/pi)*(dAdx(1) - dATdx(1) + dBdx(1) + z*dCdx(1));
-dvdxP = (0.5*U/pi)*((dAdx(2) - dATdx(2) + dBdx(2) + z*dCdx(2))*cos(delta) - (dAdx(3) - dATdx(3) + dBdx(3) + z*dCdx(3))*sin(delta));
-dwdxP = (0.5*U/pi)*((dAdx(2) - dATdx(2) + dBdx(2) - z*dCdx(2))*sin(delta) + (dAdx(3) - dATdx(3) + dBdx(3) - z*dCdx(3))*cos(delta));
+dudxP = (0.5*U/pi)*(dAdx(1,:) - dATdx(1,:) + dBdx(1,:) + z*dCdx(1,:));
+dvdxP = (0.5*U/pi)*((dAdx(2,:) - dATdx(2,:) + dBdx(2,:) + z*dCdx(2,:))*cos(delta) - (dAdx(3,:) - dATdx(3,:) + dBdx(3,:) + z*dCdx(3,:))*sin(delta));
+dwdxP = (0.5*U/pi)*((dAdx(2,:) - dATdx(2,:) + dBdx(2,:) - z*dCdx(2,:))*sin(delta) + (dAdx(3,:) - dATdx(3,:) + dBdx(3,:) - z*dCdx(3,:))*cos(delta));
 
-dudyP = (0.5*U/pi)*(dAdy(1) - dATdy(1) + dBdy(1) + z*dCdy(1));
-dvdyP = (0.5*U/pi)*((dAdy(2) - dATdy(2) + dBdy(2) + z*dCdy(2))*cos(delta) - (dAdy(3) - dATdy(3) + dBdy(3) + z*dCdy(3))*sin(delta));
-dwdyP = (0.5*U/pi)*((dAdy(2) - dATdy(2) + dBdy(2) - z*dCdy(2))*sin(delta) + (dAdy(3) - dATdy(3) + dBdy(3) - z*dCdy(3))*cos(delta));
+dudyP = (0.5*U/pi)*(dAdy(1,:) - dATdy(1,:) + dBdy(1,:) + z*dCdy(1,:));
+dvdyP = (0.5*U/pi)*((dAdy(2,:) - dATdy(2,:) + dBdy(2,:) + z*dCdy(2,:))*cos(delta) - (dAdy(3,:) - dATdy(3,:) + dBdy(3,:) + z*dCdy(3,:))*sin(delta));
+dwdyP = (0.5*U/pi)*((dAdy(2,:) - dATdy(2,:) + dBdy(2,:) - z*dCdy(2,:))*sin(delta) + (dAdy(3,:) - dATdy(3,:) + dBdy(3,:) - z*dCdy(3,:))*cos(delta));
 
-dudzP = (0.5*U/pi)*(dAdz(1) + dATdz(1) + dBdz(1) + C(1) + z*dCdz(1));
-dvdzP = (0.5*U/pi)*((dAdz(2) + dATdz(2) + dBdz(2) + C(2) + z*dCdz(2))*cos(delta) - (dAdz(3) + dATdz(3) + dBdz(3) + C(3) + z*dCdz(3))*sin(delta));
-dwdzP = (0.5*U/pi)*((dAdz(2) + dATdz(2) + dBdz(2) - C(2) - z*dCdz(2))*sin(delta) + (dAdz(3) + dATdz(3) + dBdz(3) - C(3) - z*dCdz(3))*cos(delta));
+dudzP = (0.5*U/pi)*(dAdz(1,:) + dATdz(1,:) + dBdz(1,:) + C(1,:) + z*dCdz(1,:));
+dvdzP = (0.5*U/pi)*((dAdz(2,:) + dATdz(2,:) + dBdz(2,:) + C(2,:) + z*dCdz(2,:))*cos(delta) - (dAdz(3,:) + dATdz(3,:) + dBdz(3,:) + C(3,:) + z*dCdz(3,:))*sin(delta));
+dwdzP = (0.5*U/pi)*((dAdz(2,:) + dATdz(2,:) + dBdz(2,:) - C(2,:) - z*dCdz(2,:))*sin(delta) + (dAdz(3,:) + dATdz(3,:) + dBdz(3,:) - C(3,:) - z*dCdz(3,:))*cos(delta));
 
-dvs_arr = [dudxP; dvdyP; dwdzP; dudyP; dudzP; dvdxP; dvdzP; dwdxP; dwdyP];
-dvs_rot = rotmat_dvs\dvs_arr; 
+dvs_rot = rotmat_dvs\[dudxP; dvdyP; dwdzP; dudyP; dudzP; dvdxP; dvdzP; dwdxP; dwdyP];
 
-dudx = dvs_rot(1);
-dvdy = dvs_rot(2);
-dwdz = dvs_rot(3);
-dudy = dvs_rot(4);
-dudz = dvs_rot(5);
-dvdx = dvs_rot(6);
-dvdz = dvs_rot(7);
-dwdx = dvs_rot(8);
-dwdy = dvs_rot(9);
+dudx = reshape(dvs_rot(1,:), size(x));
+dvdy = reshape(dvs_rot(2,:), size(y));
+dwdz = reshape(dvs_rot(3,:), size(x));
+dudy = reshape(dvs_rot(4,:), size(y));
+dudz = reshape(dvs_rot(5,:), size(x));
+dvdx = reshape(dvs_rot(6,:), size(y));
+dvdz = reshape(dvs_rot(7,:), size(x));
+dwdx = reshape(dvs_rot(8,:), size(y));
+dwdy = reshape(dvs_rot(9,:), size(x));
 
 end

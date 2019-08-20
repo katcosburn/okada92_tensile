@@ -19,8 +19,8 @@ nu     = 0.25;        % material properties, Poisson ratio
 %  zt     = z coordinate of top left corner of fault, positive downwards (m)
 %  z0     = z coordinate of bottom left corner of fault (m)
 
-L = 2e3;
-W = 1e3;
+L = 1e3;
+W = 5e2;
 U = 1.0;
 
 phi   = deg2rad(90);
@@ -33,7 +33,7 @@ z0 = zt + W*sin(delta);
 
 %% Set up box of coordinates over which to get displacements
 
-res  = 80;    % resolution of box 
+res  = 100;    % resolution of box 
 bpad = 1e4;    % padding of box around fault
 
 rotmat   = [sin(phi), cos(phi); -cos(phi), sin(phi)]; 
@@ -47,16 +47,10 @@ bmax_y = max(midpoint(2) - bpad, midpoint(2) + bpad);
 
 [xx, yy] = meshgrid(linspace(bmin_x, bmax_x, res), linspace(bmin_y, bmax_y, res));
 
-[uu, vv, ww, duu_dx, dvv_dy, dww_dz, duu_dz, dww_dx, dvv_dz, dww_dy, duu_dy, dvv_dx] = deal(zeros(size(xx)));
-
 %% Displacement from okada85 and okada92 
 
-for i = 1:res
-    for j = 1:res
-        [uu(i,j), vv(i,j), ww(i,j), duu_dx(i,j), dvv_dy(i,j), dww_dz(i,j), duu_dz(i,j), dww_dx(i,j), dvv_dz(i,j), ...
-         dww_dy(i,j), duu_dy(i,j), dvv_dx(i,j)] = okada92_kc(x0, y0, z0, xx(i,j), yy(i,j), zlevel, L, W, U, phi, delta, mu, nu); 
-    end
-end
+[uu, vv, ww, duu_dx, dvv_dy, dww_dz, duu_dz, dww_dx, dvv_dz, dww_dy, duu_dy, dvv_dx] = ...
+    okada92_kc(x0, y0, z0, xx, yy, zlevel, L, W, U, phi, delta, mu, nu); 
 
 %% Plot 1 (2D quiver plot of displacements + 2D fault plot)
 

@@ -55,16 +55,8 @@ for zl = 1:length(zlevel)
                   
     [xx, yy] = meshgrid(xrange, yrange);
     
-    [uu, vv, ww, duu_dx, dvv_dy, dww_dz, duu_dz, dww_dx, dvv_dz, dww_dy, duu_dy, dvv_dx] = deal(zeros(size(xx)));
-    
-    %% Displacement from okada85 and okada92
-    
-    for i = 1:res
-        for j = 1:res
-            [uu(i,j), vv(i,j), ww(i,j), duu_dx(i,j), dvv_dy(i,j), dww_dz(i,j), duu_dz(i,j), dww_dx(i,j), dvv_dz(i,j), ...
-                dww_dy(i,j), duu_dy(i,j), dvv_dx(i,j)] = okada92_kc(x0, y0, z0, xx(i,j), yy(i,j), zlevel(zl), L, W, U, phi, delta, mu, nu);
-        end
-    end
+    [uu, vv, ww, duu_dx, dvv_dy, dww_dz, duu_dz, dww_dx, dvv_dz, dww_dy, duu_dy, dvv_dx] = ...
+                                                    okada92_kc(x0, y0, z0, xx, yy, zlevel, L, W, U, phi, delta, mu, nu); 
     
     %% Plot 1 (3D quiver plot of displacements + 3D fault plot)
     
