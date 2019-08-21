@@ -19,16 +19,16 @@ nu     = 0.25;        % material properties, Poisson ratio
 %  zt     = z coordinate of top left corner of fault, positive downwards (m)
 %  z0     = z coordinate of bottom left corner of fault (m)
 
-L = 1e3;
-W = 5e2;
+L = 2e3;
+W = 1e3;
 U = 1.0;
 
-phi   = deg2rad(90);
+phi   = deg2rad(270);
 delta = deg2rad(90);
 
 x0 = 0e3;
 y0 = 0e3;
-zt = 3e3;
+zt = 4e3;
 z0 = zt + W*sin(delta);
 
 %% Set up box of coordinates over which to get displacements
@@ -36,8 +36,8 @@ z0 = zt + W*sin(delta);
 res  = 100;    % resolution of box 
 bpad = 1e4;    % padding of box around fault
 
-rotmat   = [sin(phi), cos(phi); -cos(phi), sin(phi)]; 
-midpoint = rotmat\[x0 + 0.5*L; y0 + 0.5*W*cos(delta)];
+rotmat   = [sin(phi), cos(phi); -cos(phi), sin(phi)];
+midpoint = rotmat\[0.5*L; 0.5*W*cos(delta)] + [x0; y0];
 
 bmin_x = min(midpoint(1) - bpad, midpoint(1) + bpad);  
 bmin_y = min(midpoint(2) - bpad, midpoint(2) + bpad);
@@ -67,7 +67,7 @@ grid on
 
 figure(2); hold on;
 set(gca, 'FontSize', 18)
-quiver3(xx, yy, zlevel*ones(size(xx)), uu, vv, ww); 
+quiver3(xx, yy, zlevel*ones(size(xx)), uu, vv, ww, 3); 
 plotfault(3, x0, y0, z0, L, W, phi, delta); 
 plot3(x0, y0, -z0, 'ko', 'markerfacecolor', 'y')
 xlim([bmin_x bmax_x]); ylim([bmin_y bmax_y]);

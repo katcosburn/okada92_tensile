@@ -41,8 +41,8 @@ for zl = 1:length(zlevel)
     bpad = 5e3;
     
     rotmat   = [sin(phi), cos(phi); -cos(phi), sin(phi)];
-    midpoint = rotmat\[x0 + 0.5*L; y0 + 0.5*W*cos(delta)];    
-    endpoint = rotmat\[x0 + L; y0 + W*cos(delta)];
+    midpoint = rotmat\[0.5*L; 0.5*W*cos(delta)] + [x0; y0];    
+    endpoint = rotmat\[L; W*cos(delta)] + [x0; y0];
     
     bmin_x = min(midpoint(1) - bpad, midpoint(1) + bpad);
     bmin_y = min(midpoint(2) - bpad, midpoint(2) + bpad);
