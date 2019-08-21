@@ -26,18 +26,32 @@ check_ii = abs(xi) > epsilon;
 % condition (iii)
 
 check_iii = abs(R + xi) > epsilon;
-ln_Rxi    = ~check_iii*(-1).*log(R - xi) + check_iii.*log(R + xi);
-X11       = check_iii./R./(R + xi);
-X32       = check_iii.*(2*R + xi)./(R.^3)./(R + xi).^2;
-X53       = check_iii.*(8*R.^2 + 9*R.*xi + 3*xi.^2)./(R.^5)./(R + xi).^3;
+
+infcheck_Rxi_1 = -1*log(R - xi);
+infcheck_Rxi_2 = log(R + xi);
+
+infcheck_Rxi_1(isinf(infcheck_Rxi_1)) = 0;
+infcheck_Rxi_2(isinf(infcheck_Rxi_2)) = 0;
+
+ln_Rxi = ~check_iii.*infcheck_Rxi_1 + check_iii.*infcheck_Rxi_2;
+X11    = check_iii./R./(R + xi);
+X32    = check_iii.*(2*R + xi)./(R.^3)./(R + xi).^2;
+X53    = check_iii.*(8*R.^2 + 9*R.*xi + 3*xi.^2)./(R.^5)./(R + xi).^3;
 
 % condition (iv)
 
 check_iv = abs(R + eta) > epsilon;
-ln_Reta  = ~check_iv*(-1).*log(R - eta) + check_iv.*log(R + eta);
-Y11      = check_iv./R./(R + eta);
-Y32      = check_iv.*(2*R + eta)./(R.^3)./(R + eta).^2;
-Y53      = check_iv.*(8*R.^2 + 9*R.*eta + 3*eta.^2)./(R.^5)./(R + eta).^3;
+
+infcheck_Reta_1 = -1*log(R - eta);
+infcheck_Reta_2 = log(R + eta);
+
+infcheck_Reta_1(isinf(infcheck_Reta_1)) = 0;
+infcheck_Reta_2(isinf(infcheck_Reta_2)) = 0;
+
+ln_Reta = ~check_iv.*infcheck_Reta_1 + check_iv.*infcheck_Reta_2;
+Y11     = check_iv./R./exp(infcheck_Reta_2);
+Y32     = check_iv.*(2*R + eta)./(R.^3)./exp(infcheck_Reta_2).^2;
+Y53     = check_iv.*(8*R.^2 + 9*R.*eta + 3*eta.^2)./(R.^5)./exp(infcheck_Reta_2).^3;
 
 %% Define other variables from equation 14
 
