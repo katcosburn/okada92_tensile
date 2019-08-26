@@ -1,4 +1,4 @@
-%% Wrapper code with random fault parameters (step 1) for fault model by Okada (1992), v2.0
+%% Wrapper code with random fault parameters (step 2) for fault model by Okada (1992), v2.0
 
 clear all; close all;
 
@@ -12,7 +12,6 @@ mu      = 1e9;      % shear modulus (Pa)
 nu      = 0.25;     % Poisson ratio
 
 delta = deg2rad(90);
-phi   = deg2rad(90);
 
 L  = 0.5*radius;    % length along fault strike direction (m)
 W  = 0.5*L;         % length along perpendicular direction to strike (m)
@@ -67,30 +66,20 @@ for n = 1:nevents
     y0 = yy(faultlist);
     z0 = 1e3 + 4e3.*rand(1,1);
     
-    %% Plotting
-    
-    % figure(1); hold on;
-    % set(gca, 'FontSize', 18)
-    % plot(radius*cosd(0:1:360), radius*sind(0:1:360), 'r--')
-    % plot(xx(faultlist), yy(faultlist), 'ko', 'markerfacecolor', 'b')
-    % xlabel('X (m)'); ylabel('Y (m)');
-    % title('Random Faults on Grid')
+    phi = 2*pi*rand(length(faultlist), 1);
     
     %% Iterate through faults and get displacements/derivatives for each
     
     for f = 1:length(faultlist)
         
         [u, v, w, du_dx, dv_dy, dw_dz, du_dz, dw_dx, dv_dz, dw_dy, du_dy, dv_dx] = ...
-            okada92_kc(x0(f), y0(f), z0, xx, yy, zlevel, L, W, U, phi, delta, mu, nu);
+            okada92_kc(x0(f), y0(f), z0, xx, yy, zlevel, L, W, U, phi(f), delta, mu, nu);
         
         uu     = uu + u;            vv     = vv + v;            ww     = ww + w;
         duu_dx = duu_dx + du_dx;    dvv_dy = dvv_dy + dv_dy;    dww_dz = dww_dz + dw_dz;
         duu_dy = duu_dy + du_dy;    dvv_dx = dvv_dx + dv_dx;    dww_dx = dww_dx + dw_dx;
         duu_dz = duu_dz + du_dz;    dvv_dz = dvv_dz + dv_dz;    dww_dy = dww_dy + dw_dy;
-    
-%     [s11, s22, s33, s23, s31, s12] = ...
-%         calculate_stresses(mu, nu, duu_dx, dvv_dy, dww_dz, dvv_dz+dww_dy, dww_dx+duu_dz, duu_dy+dvv_dx);
-
+   
     end
 end
 
