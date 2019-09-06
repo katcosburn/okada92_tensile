@@ -19,21 +19,24 @@ nu     = 0.25;        % material properties, Poisson ratio
 %  zt     = z coordinate of top left corner of fault, positive downwards (m)
 %  z0     = z coordinate of bottom left corner of fault (m)
 
-L = 2e3;
-W = 1e3;
+L = 20e3;
+W = 0.5*L;
 U = 1.0;
 
-phi   = deg2rad(270);
+phi   = deg2rad(90);
 delta = deg2rad(90);
 
 x0 = 0e3;
 y0 = 0e3;
-zt = 4e3;
+zt = 2e3;
 z0 = zt + W*sin(delta);
+
+% z0 = 4e3;
+% zt = z0 - W*sin(delta);
 
 %% Set up box of coordinates over which to get displacements
 
-res  = 100;    % resolution of box 
+res  = 1e3;    % resolution of box 
 bpad = 1e4;    % padding of box around fault
 
 rotmat   = [sin(phi), cos(phi); -cos(phi), sin(phi)];
@@ -67,7 +70,7 @@ grid on
 
 figure(2); hold on;
 set(gca, 'FontSize', 18)
-quiver3(xx, yy, zlevel*ones(size(xx)), uu, vv, ww, 3); 
+quiver3(xx, yy, zlevel*ones(size(xx)), uu, vv, ww, 2); 
 plotfault(3, x0, y0, z0, L, W, phi, delta); 
 plot3(x0, y0, -z0, 'ko', 'markerfacecolor', 'y')
 xlim([bmin_x bmax_x]); ylim([bmin_y bmax_y]);
@@ -80,7 +83,7 @@ grid on
 
 figure(3); hold on;
 set(gca, 'FontSize', 18)
-surf(xx, yy, ww, 'FaceAlpha', .95, 'EdgeColor', [.3 .3 .3]) 
+surf(xx, yy, ww, 'EdgeColor', 'None') 
 xlim([bmin_x bmax_x]); ylim([bmin_y bmax_y]);
 xlabel('X (m)'); ylabel('Y (m)'); zlabel('Z (m)');
 title('Displacement in Z-direction')
@@ -97,21 +100,21 @@ figure(4); hold on;
 
 subplot(3,1,1); hold on;
 set(gca, 'FontSize', 14)
-surf(xx, yy, area_dil, 'FaceAlpha', .95, 'EdgeColor', [.3 .3 .3]) 
+surf(xx, yy, area_dil, 'EdgeColor', 'None') 
 xlabel('X (m)'); zlabel('du/dx + dv/dy');
 view(-65, 10)
 grid on
 
 subplot(3,1,2); hold on;
 set(gca, 'FontSize', 14)
-surf(xx, yy, sstrain1, 'FaceAlpha', .95, 'EdgeColor', [.3 .3 .3]) 
+surf(xx, yy, sstrain1, 'EdgeColor', 'None') 
 xlabel('X (m)'); zlabel('du/dx - dv/dy');
 view(-65, 10)
 grid on
 
 subplot(3,1,3); hold on;
 set(gca, 'FontSize', 14)
-surf(xx, yy, sstrain2, 'FaceAlpha', .95, 'EdgeColor', [.3 .3 .3]) 
+surf(xx, yy, sstrain2, 'EdgeColor', 'None') 
 xlabel('X (m)'); zlabel('du/dx + dv/dx');
 view(-65, 10)
 grid on
