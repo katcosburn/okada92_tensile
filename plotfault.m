@@ -1,25 +1,21 @@
 function plotfault(dim, x0, y0, z0, L, W, phi, delta) 
 
-rotmat  = [sin(phi), cos(phi); -cos(phi), sin(phi)];
-LWprime = rotmat\[L; W*cos(delta)];
-
-dz = W*sin(delta);
-z1 = z0 - dz;
-
-xy1 = LWprime + [x0; y0];
+p1 = [x0, y0, z0] + L*[sin(phi), cos(phi), 0];
+p2 = p1 + W*[-cos(delta)*cos(phi), cos(delta)*sin(phi), -sin(delta)];
+p3 = [x0, y0, z0] + (p2 - p1);
 
 if dim == 2
     
-    X = [xy0(1) xy1(1)];
-    Y = [xy0(2) xy1(2)];
+    X = [x0, p1(1), p2(1), p3(1), x0];
+    Y = [y0, p1(2), p2(2), p3(2), y0];
     
-    plot(X, Y, 'r-', 'Linewidth', 2)
+    plot(X, Y); hold on;
     
 elseif dim == 3
     
-    X = [x0 xy1(1) xy1(1) x0 x0];
-    Y = [y0 xy1(2) xy1(2) y0 y0];
-    Z = [z0 z0     z1     z1 z0];
+    X = [x0, p1(1), p2(1), p3(1), x0];
+    Y = [y0, p1(2), p2(2), p3(2), y0];
+    Z = [z0, p1(3), p2(3), p3(3), z0];
     
     plot3(X, Y, -Z); hold on;
     
