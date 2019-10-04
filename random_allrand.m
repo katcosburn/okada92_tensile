@@ -1,4 +1,4 @@
-%% Wrapper code with random fault parameters L,W,U,phi,delta,x0,y0
+%% Wrapper code with random parameters L, W, U, phi, delta, x0, y0
 
 clear all; close all;
 
@@ -11,7 +11,7 @@ zlevel = 0e3;      % depth of internal deformation (m) -> 0 is free surface
 mu     = 1e9;      % shear modulus (Pa)
 nu     = 0.25;     % Poisson ratio
 
-%% Set up circle (to be populated with faults) and gridded box
+%% Set up circle (to be populated with dykes) and gridded box
 
 boxsize    = 2e4;      % dimension of box over which to get solution (m)
 fine_res   = 5e3;
@@ -21,18 +21,18 @@ coarse_res = 5e2;
 [xp, yp] = meshgrid(radius*linspace(-1, 1, fine_res), radius*linspace(-1, 1, fine_res));
 cinds    = find(xp.^2 + yp.^2 - radius^2 <= 0);
 
-%% For each event, populate circle with random distribtion of faults
+%% For each event, populate circle with random distribution of dykes
 
-faultlist = zeros(nevents, 1);
+dykelist = zeros(nevents, 1);
 [uu, vv, ww, duu_dx, dvv_dy, dww_dz, duu_dz, dww_dx, dvv_dz, dww_dy, duu_dy, dvv_dx] = deal(zeros(size(xx)));
 
 for n = 1:nevents 
                                                                             
-    fault1 = randsample(cinds, 1);  
-    faultlist(n) = fault1;
+    dyke1 = randsample(cinds, 1);  
+    dykelist(n) = dyke1;
     
-    x0 = xp(fault1);
-    y0 = yp(fault1);
+    x0 = xp(dyke1);
+    y0 = yp(dyke1);
     z0 = 3100;
     
     L = 1000 + 4000*rand;
@@ -52,12 +52,12 @@ for n = 1:nevents
 
 end
 
-%% Plot distribution of faults
+%% Plot distribution of events
 
 figure(1); hold on;
 set(gca, 'FontSize', 18)
 plot(radius*cosd(0:1:360), radius*sind(0:1:360), 'r--')
-plot(xp(faultlist), yp(faultlist), 'ko', 'markerfacecolor', 'b')
+plot(xp(dykelist), yp(dykelist), 'ko', 'markerfacecolor', 'b')
 xlabel('X (m)'); ylabel('Y (m)');
 title('Random Faults on Grid')
 
