@@ -15,3 +15,5 @@ The strikeangletest.m code iterates through a suite of strike andgles (phi).
 
 The zleveltest.m code iterates through a suite of z-values at which the solution is evaluated.
 
+The random.m code sums up the displacements due to a number of dkying events with random values assigned to each of the parameters above.
+
