@@ -69,5 +69,4 @@ surf(xx, yy, ww, 'EdgeColor', 'None')
 xlabel('X (m)'); ylabel('Y (m)'); zlabel('Z (m)');
 title('Displacement in Z-direction')
 view(-35, 5)
-% view(0, 0)
 grid on
